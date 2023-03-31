@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,5 +30,14 @@ public class LinguagemController {
     @GetMapping(value="/linguagens/{id}")
     public Linguagem findById(@PathVariable String id){
         return repositorio.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/linguagens")
+    public ResponseEntity<Linguagem> cadastrarLinguagem(@RequestBody Linguagem linguagem) {
+        if (repositorio.existsByTitle(linguagem.getTitle()) || repositorio.existsByRanking(linguagem.getRanking())) {
+            return ResponseEntity.badRequest().build();
+        }
+        Linguagem linguagemSalva = repositorio.save(linguagem);
+        return ResponseEntity.status(HttpStatus.CREATED).body(linguagemSalva);
     }
 }
