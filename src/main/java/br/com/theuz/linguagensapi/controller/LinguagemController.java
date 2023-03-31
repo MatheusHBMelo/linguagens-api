@@ -33,7 +33,7 @@ public class LinguagemController {
     }
 
     @PostMapping("/linguagens")
-    public ResponseEntity<Linguagem> cadastrarLinguagem(@RequestBody Linguagem linguagem) {
+    public ResponseEntity<Linguagem> addLanguage(@RequestBody Linguagem linguagem) {
         if (repositorio.existsByTitle(linguagem.getTitle()) || repositorio.existsByRanking(linguagem.getRanking())) {
             return ResponseEntity.badRequest().build();
         }
